@@ -1,0 +1,50 @@
+@model List<MT3.Models.ApplicationUser>
+@{
+    ViewData["Title"] = "Manage Users";
+}
+
+<div class="container-fluid py-4 px-4">
+    <div class="d-flex align-items-center gap-3 mb-4">
+        <a asp-action="Index" class="btn btn-outline-secondary rounded-pill btn-sm"><i class="bi bi-arrow-left me-1"></i>Back</a>
+        <h2 class="fw-bold mb-0"><i class="bi bi-people text-danger me-2"></i>Users (@Model.Count)</h2>
+    </div>
+    <div class="card border-0 shadow-sm rounded-4">
+        <div class="card-body p-4">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th>User</th>
+                            <th>Email</th>
+                            <th>Joined</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var user in Model)
+                        {
+                            <tr>
+                                <td>
+                                    <div class="d-flex align-items-center gap-2">
+                                        <img src="@(user.AvatarUrl ?? "https://ui-avatars.com/api/?name=U&background=e84118&color=fff")"
+                                             class="rounded-circle" width="36" height="36" style="object-fit:cover;" />
+                                        <span class="fw-semibold">@(user.FullName ?? "N/A")</span>
+                                    </div>
+                                </td>
+                                <td class="text-muted">@user.Email</td>
+                                <td class="text-muted small">@user.JoinedAt.ToString("MMM dd, yyyy")</td>
+                                <td>
+                                    <form asp-action="DeleteUser" method="post" class="d-inline" onsubmit="return confirm('Delete user?')">
+                                        @Html.AntiForgeryToken()
+                                        <input type="hidden" name="id" value="@user.Id" />
+                                        <button class="btn btn-outline-danger btn-sm rounded-pill">Delete</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

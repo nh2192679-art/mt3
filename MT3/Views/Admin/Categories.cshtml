@@ -1,0 +1,58 @@
+@model List<MT3.Models.Category>
+@{
+    ViewData["Title"] = "Manage Categories";
+}
+
+<div class="container-fluid py-4 px-4">
+    <div class="d-flex align-items-center gap-3 mb-4">
+        <a asp-action="Index" class="btn btn-outline-secondary rounded-pill btn-sm"><i class="bi bi-arrow-left me-1"></i>Back</a>
+        <h2 class="fw-bold mb-0"><i class="bi bi-tags text-danger me-2"></i>Categories</h2>
+    </div>
+    <div class="row g-4">
+        <div class="col-lg-4">
+            <div class="card border-0 shadow-sm rounded-4 p-4">
+                <h5 class="fw-bold mb-3"><i class="bi bi-plus-circle text-danger me-2"></i>Add Category</h5>
+                <form asp-action="CreateCategory" method="post">
+                    @Html.AntiForgeryToken()
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Name</label>
+                        <input type="text" name="name" class="form-control" placeholder="e.g. Desserts" required />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Icon Class (Bootstrap Icons)</label>
+                        <input type="text" name="iconClass" class="form-control" placeholder="e.g. bi-cake" />
+                    </div>
+                    <button type="submit" class="btn btn-danger rounded-pill w-100">Add Category</button>
+                </form>
+            </div>
+        </div>
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-sm rounded-4 p-4">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle">
+                        <thead class="table-light">
+                            <tr><th>Name</th><th>Icon</th><th>Recipes</th><th>Actions</th></tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var cat in Model)
+                            {
+                                <tr>
+                                    <td class="fw-semibold">@cat.Name</td>
+                                    <td><i class="bi @(cat.IconClass ?? "bi-tag") text-danger"></i> <small class="text-muted">@cat.IconClass</small></td>
+                                    <td><span class="badge bg-danger-subtle text-danger">@cat.Recipes.Count</span></td>
+                                    <td>
+                                        <form asp-action="DeleteCategory" method="post" class="d-inline" onsubmit="return confirm('Delete?')">
+                                            @Html.AntiForgeryToken()
+                                            <input type="hidden" name="id" value="@cat.Id" />
+                                            <button class="btn btn-outline-danger btn-sm rounded-pill">Delete</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

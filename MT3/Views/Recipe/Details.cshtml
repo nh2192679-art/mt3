@@ -1,0 +1,270 @@
+@model MT3.Models.ViewModels.RecipeDetailViewModel
+@{
+    ViewData["Title"] = Model.Recipe?.Title ?? "Recipe Detail";
+    var recipe = Model.Recipe;
+    var avgRating = recipe?.AverageRating ?? 0;
+}
+
+@if (recipe == null)
+{
+    <div class="container py-5 text-center">
+        <h3>Recipe not found</h3>
+        <a asp-action="Index" class="btn btn-danger">Back to Recipes</a>
+    </div>
+    return;
+}
+
+<!-- Recipe Header -->
+<div class="container-fluid p-0" style="max-height:420px;overflow:hidden;">
+    <img src="@(recipe.ImageUrl ?? "https://images.unsplash.com/photo-1495521821757-a1efb6729352?w=1200")"
+         class="w-100" style="height:420px;object-fit:cover;" alt="@recipe.Title" />
+</div>
+
+<div class="container py-5">
+    <div class="row g-5">
+        <!-- Main Content -->
+        <div class="col-lg-8">
+            <!-- Title & Meta -->
+            <div class="mb-4">
+                <div class="d-flex align-items-center gap-2 mb-2 flex-wrap">
+                    <span class="badge-category">@recipe.Category?.Name</span>
+                    <span class="badge @(recipe.Difficulty == "Easy" ? "badge-easy" : recipe.Difficulty == "Medium" ? "badge-medium" : "badge-hard")">@recipe.Difficulty</span>
+                </div>
+                <h1 class="fw-bold font-display mb-2">@recipe.Title</h1>
+                <div class="d-flex align-items-center gap-4 text-muted flex-wrap mb-3">
+                    <span><i class="bi bi-clock me-1 text-danger"></i>@recipe.CookingTime min</span>
+                    <span><i class="bi bi-fire me-1 text-warning"></i>@recipe.Calories kcal</span>
+                    <span><i class="bi bi-people me-1 text-info"></i>@recipe.Servings servings</span>
+                    <div class="stars">
+                        @for (int i = 1; i <= 5; i++)
+                        {
+                            <i class="bi @(i <= Math.Round(avgRating) ? "bi-star-fill" : "bi-star")"></i>
+                        }
+                        <span class="text-muted small ms-1">@avgRating.ToString("F1") (@recipe.RatingCount reviews)</span>
+                    </div>
+                </div>
+                <p class="lead text-muted">@recipe.Description</p>
+                <small class="text-muted">
+                    <i class="bi bi-person me-1"></i>By <strong>@(recipe.User?.FullName ?? recipe.User?.UserName ?? "Unknown")</strong>
+                    · <i class="bi bi-calendar me-1"></i>@recipe.CreatedAt.ToString("MMM dd, yyyy")
+                </small>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="d-flex gap-2 mb-5 flex-wrap">
+                @if (User.Identity?.IsAuthenticated == true)
+                {
+                    <form asp-action="ToggleFavorite" method="post" class="d-inline">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="recipeId" value="@recipe.Id" />
+                        <button type="submit" class="btn @(Model.IsFavorited ? "btn-danger" : "btn-outline-danger") rounded-pill">
+                            <i class="bi @(Model.IsFavorited ? "bi-heart-fill" : "bi-heart") me-1"></i>
+                            @(Model.IsFavorited ? "Saved" : "Save Recipe")
+                        </button>
+                    </form>
+                    <form asp-controller="ShoppingList" asp-action="AddFromRecipe" method="post" class="d-inline">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="recipeId" value="@recipe.Id" />
+                        <button type="submit" class="btn btn-outline-success rounded-pill">
+                            <i class="bi bi-cart-plus me-1"></i>Add to Shopping List
+                        </button>
+                    </form>
+                    @if (recipe.UserId == User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value || User.IsInRole("Admin"))
+                    {
+                        <a asp-action="Edit" asp-route-id="@recipe.Id" class="btn btn-outline-primary rounded-pill">
+                            <i class="bi bi-pencil me-1"></i>Edit
+                        </a>
+                        <form asp-action="Delete" method="post" class="d-inline" onsubmit="return confirm('Delete this recipe?')">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="id" value="@recipe.Id" />
+                            <button type="submit" class="btn btn-outline-danger rounded-pill"><i class="bi bi-trash me-1"></i>Delete</button>
+                        </form>
+                    }
+                }
+                else
+                {
+                    <a asp-controller="Account" asp-action="Login" class="btn btn-outline-danger rounded-pill">
+                        <i class="bi bi-heart me-1"></i>Save Recipe
+                    </a>
+                }
+            </div>
+
+            <!-- Ingredients -->
+            <div class="mb-5">
+                <h3 class="fw-bold mb-4"><i class="bi bi-list-check text-danger me-2"></i>Ingredients</h3>
+                @if (recipe.RecipeIngredients.Any())
+                {
+                    <div class="row g-2">
+                        @foreach (var ri in recipe.RecipeIngredients)
+                        {
+                            <div class="col-md-6">
+                                <div class="ingredient-item">
+                                    <input type="checkbox" class="form-check-input" />
+                                    <span class="fw-semibold">@ri.Ingredient?.Name</span>
+                                    <span class="text-muted ms-auto small">@ri.Quantity</span>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                }
+                else
+                {
+                    <p class="text-muted">No ingredients listed.</p>
+                }
+            </div>
+
+            <!-- Steps -->
+            <div class="mb-5">
+                <h3 class="fw-bold mb-4"><i class="bi bi-list-ol text-danger me-2"></i>Instructions</h3>
+                @if (recipe.Steps.Any())
+                {
+                    @foreach (var step in recipe.Steps.OrderBy(s => s.StepNumber))
+                    {
+                        <div class="step-item">
+                            <div class="step-number">@step.StepNumber</div>
+                            <div class="pt-2">
+                                <p class="mb-0">@step.Instruction</p>
+                            </div>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <p class="text-muted">No steps provided.</p>
+                }
+            </div>
+
+            <!-- Rating Section -->
+            @if (User.Identity?.IsAuthenticated == true)
+            {
+                <div class="card border-0 bg-light rounded-4 p-4 mb-5">
+                    <h4 class="fw-bold mb-3"><i class="bi bi-star text-warning me-2"></i>Rate this Recipe</h4>
+                    <form asp-action="Rate" method="post" class="d-flex align-items-center gap-3">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="recipeId" value="@recipe.Id" />
+                        <div class="star-input d-flex flex-row-reverse gap-1">
+                            @for (int i = 5; i >= 1; i--)
+                            {
+                                <input type="radio" name="score" id="star@i" value="@i" @(Model.UserRating == i ? "checked" : "") />
+                                <label for="star@i"><i class="bi bi-star-fill"></i></label>
+                            }
+                        </div>
+                        <button type="submit" class="btn btn-warning rounded-pill px-4">
+                            @(Model.UserRating.HasValue ? "Update Rating" : "Submit Rating")
+                        </button>
+                    </form>
+                    @if (Model.UserRating.HasValue)
+                    {
+                        <small class="text-muted mt-2">Your current rating: @Model.UserRating ⭐</small>
+                    }
+                </div>
+            }
+
+            <!-- Comments -->
+            <div class="mb-5">
+                <h3 class="fw-bold mb-4"><i class="bi bi-chat-dots text-danger me-2"></i>Comments (@recipe.Comments.Count)</h3>
+
+                @if (User.Identity?.IsAuthenticated == true)
+                {
+                    <form asp-action="AddComment" method="post" class="mb-4">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="recipeId" value="@recipe.Id" />
+                        <div class="d-flex gap-3">
+                            <img src="https://ui-avatars.com/api/?name=@Uri.EscapeDataString(User.Identity.Name ?? "U")&background=e84118&color=fff"
+                                 class="rounded-circle" width="40" height="40" />
+                            <div class="flex-grow-1">
+                                <textarea name="content" class="form-control rounded-4" rows="3" placeholder="Share your experience or tips..." required></textarea>
+                                <button type="submit" class="btn btn-danger btn-sm mt-2 rounded-pill px-4">Post Comment</button>
+                            </div>
+                        </div>
+                    </form>
+                }
+
+                @foreach (var comment in recipe.Comments.OrderByDescending(c => c.CreatedAt))
+                {
+                    <div class="d-flex gap-3 mb-4">
+                        <img src="https://ui-avatars.com/api/?name=@Uri.EscapeDataString(comment.User?.FullName ?? comment.User?.UserName ?? "U")&background=e84118&color=fff"
+                             class="rounded-circle" width="42" height="42" />
+                        <div class="flex-grow-1">
+                            <div class="bg-light rounded-4 p-3">
+                                <div class="fw-semibold mb-1">@(comment.User?.FullName ?? comment.User?.UserName ?? "Anonymous")</div>
+                                <p class="mb-0 text-muted">@comment.Content</p>
+                            </div>
+                            <small class="text-muted ms-2">@comment.CreatedAt.ToString("MMM dd, yyyy HH:mm")</small>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <!-- Sidebar -->
+        <div class="col-lg-4">
+            <!-- Nutrition Card -->
+            <div class="card sidebar-card mb-4">
+                <div class="card-body">
+                    <h5 class="fw-bold mb-3"><i class="bi bi-heart-pulse text-danger me-2"></i>Nutrition Info</h5>
+                    <div class="row g-3 text-center">
+                        <div class="col-6">
+                            <div class="p-3 bg-light rounded-3">
+                                <div class="fw-bold fs-4 text-danger">@recipe.Calories</div>
+                                <small class="text-muted">Calories</small>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="p-3 bg-light rounded-3">
+                                <div class="fw-bold fs-4 text-info">@recipe.CookingTime</div>
+                                <small class="text-muted">Minutes</small>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="p-3 bg-light rounded-3">
+                                <div class="fw-bold fs-4 text-success">@recipe.Servings</div>
+                                <small class="text-muted">Servings</small>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="p-3 bg-light rounded-3">
+                                <div class="fw-bold fs-4 text-warning">@avgRating.ToString("F1")</div>
+                                <small class="text-muted">Rating</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Related Recipes -->
+            @if (Model.RelatedRecipes.Any())
+            {
+                <div class="card sidebar-card">
+                    <div class="card-body">
+                        <h5 class="fw-bold mb-3"><i class="bi bi-grid text-danger me-2"></i>Related Recipes</h5>
+                        @foreach (var rel in Model.RelatedRecipes)
+                        {
+                            <a href="/Recipe/Details/@rel.Id" class="d-flex gap-3 mb-3 text-decoration-none text-dark">
+                                <img src="@(rel.ImageUrl ?? "https://images.unsplash.com/photo-1495521821757-a1efb6729352?w=80")"
+                                     class="rounded-3" width="70" height="60" style="object-fit:cover;" alt="@rel.Title" />
+                                <div>
+                                    <div class="fw-semibold small lh-sm">@rel.Title</div>
+                                    <div class="stars small">@for (int i = 1; i <= 5; i++) { <i class="bi @(i <= Math.Round(rel.AverageRating) ? "bi-star-fill" : "bi-star")"></i> }</div>
+                                    <small class="text-muted">@rel.CookingTime min</small>
+                                </div>
+                            </a>
+                        }
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Ingredient checkbox toggle
+        document.querySelectorAll('.ingredient-item input[type="checkbox"]').forEach(cb => {
+            cb.addEventListener('change', function() {
+                this.closest('.ingredient-item').style.opacity = this.checked ? '0.5' : '1';
+                this.closest('.ingredient-item').style.textDecoration = this.checked ? 'line-through' : 'none';
+            });
+        });
+    </script>
+}

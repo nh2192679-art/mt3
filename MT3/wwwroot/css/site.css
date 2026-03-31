@@ -1,0 +1,165 @@
+﻿/* ChefVN Custom Styles */
+:root {
+  --chef-primary: #e84118;
+  --chef-secondary: #f39c12;
+  --chef-dark: #2c3e50;
+  --chef-light: #fdf6f0;
+}
+
+body { font-family: "Inter", sans-serif; background: #fff; }
+.font-display { font-family: "Playfair Display", serif; }
+
+/* Navbar */
+.bg-chef { background: linear-gradient(135deg, #c0392b 0%, #e84118 100%) !important; }
+
+/* Hero */
+.hero-section {
+  background: linear-gradient(135deg, #c0392b 0%, #e84118 50%, #f39c12 100%);
+  min-height: 480px;
+  display: flex;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+}
+.hero-section::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+}
+
+/* Recipe Cards */
+.recipe-card {
+  border: none;
+  border-radius: 16px;
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+}
+.recipe-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 12px 35px rgba(0,0,0,0.15);
+}
+.recipe-card .card-img-top {
+  height: 200px;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+.recipe-card:hover .card-img-top { transform: scale(1.05); }
+.recipe-card .img-wrapper { overflow: hidden; height: 200px; }
+
+/* Star Rating */
+.stars { color: #f39c12; }
+.star-input input { display: none; }
+.star-input label { font-size: 1.5rem; color: #ddd; cursor: pointer; transition: color 0.2s; }
+.star-input label:hover,
+.star-input label:hover ~ label,
+.star-input input:checked ~ label { color: #f39c12; }
+
+/* Category Badge */
+.badge-category {
+  background: rgba(232,65,24,0.12);
+  color: var(--chef-primary);
+  font-size: 0.75rem;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-weight: 500;
+}
+
+/* Sidebar */
+.sidebar-card {
+  border: none;
+  border-radius: 16px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+}
+
+/* Category pill buttons */
+.category-pill {
+  border-radius: 50px;
+  padding: 8px 20px;
+  font-weight: 500;
+  transition: all 0.2s;
+  border: 2px solid #e84118;
+  color: #e84118;
+  background: transparent;
+  text-decoration: none;
+  display: inline-block;
+}
+.category-pill:hover, .category-pill.active {
+  background: #e84118;
+  color: #fff;
+}
+
+/* Difficulty badges */
+.badge-easy { background:#d4edda; color:#155724; }
+.badge-medium { background:#fff3cd; color:#856404; }
+.badge-hard { background:#f8d7da; color:#721c24; }
+
+/* Meal Plan Grid */
+.meal-slot {
+  min-height: 80px;
+  border: 2px dashed #dee2e6;
+  border-radius: 12px;
+  padding: 10px;
+  transition: border-color 0.2s;
+}
+.meal-slot:hover { border-color: #e84118; }
+.meal-slot.has-meal { border-style: solid; border-color: #e84118; background: #fdf6f0; }
+
+/* Ingredient checklist */
+.ingredient-item {
+  padding: 10px 14px;
+  border-radius: 10px;
+  background: #f8f9fa;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Step item */
+.step-item {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+.step-number {
+  width: 40px;
+  height: 40px;
+  min-width: 40px;
+  background: var(--chef-primary);
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 1rem;
+}
+
+/* Admin */
+.admin-stat-card {
+  border-radius: 16px;
+  border: none;
+  padding: 24px;
+  color: white;
+}
+
+/* Shopping list */
+.shopping-item.checked { opacity: 0.5; text-decoration: line-through; }
+
+/* Responsive */
+@media (max-width: 768px) {
+  .hero-section { min-height: 300px; }
+  .recipe-card .img-wrapper, .recipe-card .card-img-top { height: 160px; }
+}
+
+/* Animations */
+.fade-in { animation: fadeIn 0.5s ease-in-out; }
+@keyframes fadeIn { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: #f1f1f1; }
+::-webkit-scrollbar-thumb { background: #e84118; border-radius: 3px; }
+

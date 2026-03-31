@@ -1,0 +1,108 @@
+@model MT3.Models.ViewModels.ShoppingListViewModel
+@{
+    ViewData["Title"] = "Shopping List";
+    var pendingItems = Model.Items.Where(i => !i.IsChecked).ToList();
+    var doneItems = Model.Items.Where(i => i.IsChecked).ToList();
+}
+
+<div class="container py-5">
+    <div class="row g-4">
+        <div class="col-lg-8">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2 class="fw-bold font-display mb-0"><i class="bi bi-cart text-danger me-2"></i>Shopping List</h2>
+                @if (Model.Items.Any())
+                {
+                    <form asp-action="Clear" method="post" onsubmit="return confirm('Clear all items?')">
+                        @Html.AntiForgeryToken()
+                        <button class="btn btn-outline-danger btn-sm rounded-pill"><i class="bi bi-trash me-1"></i>Clear All</button>
+                    </form>
+                }
+            </div>
+
+            @if (!Model.Items.Any())
+            {
+                <div class="text-center py-5 bg-light rounded-4">
+                    <i class="bi bi-cart display-1 text-muted"></i>
+                    <h4 class="mt-3 text-muted">Your shopping list is empty</h4>
+                    <p class="text-muted">Add ingredients from any recipe</p>
+                </div>
+            }
+            else
+            {
+                <div class="card border-0 shadow-sm rounded-4 mb-4">
+                    <div class="card-body p-4">
+                        <h6 class="fw-bold text-muted mb-3 text-uppercase small">To Buy (@pendingItems.Count items)</h6>
+                        @foreach (var item in pendingItems)
+                        {
+                            <div class="d-flex align-items-center gap-3 p-2 rounded-3 mb-2 bg-light shopping-item">
+                                <form asp-action="Toggle" method="post" class="d-inline">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="itemId" value="@item.Id" />
+                                    <button type="submit" class="btn btn-outline-success btn-sm rounded-circle p-1" style="width:32px;height:32px;">
+                                        <i class="bi bi-check"></i>
+                                    </button>
+                                </form>
+                                <span class="flex-grow-1 fw-semibold">@item.Ingredient?.Name</span>
+                                <span class="text-muted small">@item.Quantity</span>
+                                <form asp-action="Remove" method="post" class="d-inline">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="itemId" value="@item.Id" />
+                                    <button type="submit" class="btn btn-link text-danger btn-sm p-0"><i class="bi bi-x-lg"></i></button>
+                                </form>
+                            </div>
+                        }
+                    </div>
+                </div>
+
+                @if (doneItems.Any())
+                {
+                    <div class="card border-0 shadow-sm rounded-4">
+                        <div class="card-body p-4">
+                            <h6 class="fw-bold text-muted mb-3 text-uppercase small">Done (@doneItems.Count items)</h6>
+                            @foreach (var item in doneItems)
+                            {
+                                <div class="d-flex align-items-center gap-3 p-2 rounded-3 mb-2 bg-light shopping-item checked">
+                                    <form asp-action="Toggle" method="post" class="d-inline">
+                                        @Html.AntiForgeryToken()
+                                        <input type="hidden" name="itemId" value="@item.Id" />
+                                        <button type="submit" class="btn btn-success btn-sm rounded-circle p-1" style="width:32px;height:32px;">
+                                            <i class="bi bi-check-lg"></i>
+                                        </button>
+                                    </form>
+                                    <span class="flex-grow-1">@item.Ingredient?.Name</span>
+                                    <span class="text-muted small">@item.Quantity</span>
+                                    <form asp-action="Remove" method="post" class="d-inline">
+                                        @Html.AntiForgeryToken()
+                                        <input type="hidden" name="itemId" value="@item.Id" />
+                                        <button type="submit" class="btn btn-link text-danger btn-sm p-0"><i class="bi bi-x-lg"></i></button>
+                                    </form>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                }
+            }
+        </div>
+
+        <!-- Add from Recipe Sidebar -->
+        <div class="col-lg-4">
+            <div class="card border-0 shadow-sm rounded-4 p-4">
+                <h5 class="fw-bold mb-3"><i class="bi bi-plus-circle text-danger me-2"></i>Add from Recipe</h5>
+                <p class="text-muted small">Select a recipe to automatically add all its ingredients:</p>
+                <div class="d-flex flex-column gap-2" style="max-height:400px;overflow-y:auto;">
+                    @foreach (var recipe in Model.UserRecipes)
+                    {
+                        <form asp-action="AddFromRecipe" method="post" class="d-inline">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="recipeId" value="@recipe.Id" />
+                            <button type="submit" class="btn btn-outline-secondary btn-sm text-start w-100 rounded-3">
+                                <i class="bi bi-cart-plus me-2 text-danger"></i>@recipe.Title
+                                <span class="badge bg-secondary ms-1 float-end">@recipe.Category?.Name</span>
+                            </button>
+                        </form>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

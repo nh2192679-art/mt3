@@ -1,0 +1,143 @@
+@model MT3.Models.ViewModels.RecipeListViewModel
+@{
+    ViewData["Title"] = "All Recipes";
+}
+
+<section class="py-4 bg-light border-bottom">
+    <div class="container">
+        <div class="row g-3 align-items-end">
+            <div class="col-md-5">
+                <h2 class="fw-bold font-display mb-0">🍽️ All Recipes</h2>
+                <small class="text-muted">@Model.TotalCount recipes found</small>
+            </div>
+            <div class="col-md-7">
+                <form asp-controller="Recipe" asp-action="Index" method="get" class="row g-2">
+                    <div class="col-sm-4">
+                        <input type="search" name="search" class="form-control" placeholder="Search..." value="@Model.SearchQuery" />
+                    </div>
+                    <div class="col-sm-4">
+                        <select name="categoryId" class="form-select">
+                            <option value="">All Categories</option>
+                            @foreach (var cat in Model.Categories)
+                            {
+                                <option value="@cat.Id" selected="@(Model.CategoryId == cat.Id)">@cat.Name</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="col-sm-3">
+                        <input type="text" name="ingredient" class="form-control" placeholder="Ingredient..." value="@Model.IngredientFilter" />
+                    </div>
+                    <div class="col-sm-1">
+                        <button type="submit" class="btn btn-danger w-100"><i class="bi bi-search"></i></button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="container py-5">
+    <div class="row g-4">
+        <!-- Recipe Grid -->
+        <div class="col-lg-9">
+            @if (!Model.Recipes.Any())
+            {
+                <div class="text-center py-5">
+                    <i class="bi bi-search display-1 text-muted"></i>
+                    <h4 class="mt-3 text-muted">No recipes found</h4>
+                    <p class="text-muted">Try adjusting your search filters.</p>
+                    <a href="/Recipe" class="btn btn-danger rounded-pill">View All Recipes</a>
+                </div>
+            }
+            else
+            {
+                <div class="row g-4">
+                    @foreach (var recipe in Model.Recipes)
+                    {
+                        <div class="col-md-6 col-xl-4">
+                            <div class="card recipe-card h-100">
+                                <div class="img-wrapper position-relative">
+                                    <img src="@(recipe.ImageUrl ?? "https://images.unsplash.com/photo-1495521821757-a1efb6729352?w=400")"
+                                         class="card-img-top" alt="@recipe.Title" loading="lazy" />
+                                </div>
+                                <div class="card-body d-flex flex-column">
+                                    <div class="d-flex justify-content-between align-items-start mb-2">
+                                        <span class="badge-category">@recipe.Category?.Name</span>
+                                        <span class="text-muted small"><i class="bi bi-clock me-1"></i>@recipe.CookingTime min</span>
+                                    </div>
+                                    <h5 class="card-title fw-bold mb-1">
+                                        <a asp-action="Details" asp-route-id="@recipe.Id" class="text-dark text-decoration-none stretched-link">@recipe.Title</a>
+                                    </h5>
+                                    <p class="card-text text-muted small flex-grow-1">@(recipe.Description.Length > 80 ? recipe.Description.Substring(0, 80) + "..." : recipe.Description)</p>
+                                    <div class="d-flex align-items-center justify-content-between mt-auto pt-2 border-top">
+                                        <div class="stars small">
+                                            @for (int i = 1; i <= 5; i++)
+                                            {
+                                                <i class="bi @(i <= Math.Round(recipe.AverageRating) ? "bi-star-fill" : "bi-star")"></i>
+                                            }
+                                            <span class="text-muted ms-1">(@recipe.RatingCount)</span>
+                                        </div>
+                                        <div class="d-flex gap-2 align-items-center">
+                                            <small class="text-muted"><i class="bi bi-fire me-1"></i>@recipe.Calories kcal</small>
+                                            <span class="badge @(recipe.Difficulty == "Easy" ? "badge-easy" : recipe.Difficulty == "Medium" ? "badge-medium" : "badge-hard") small">@recipe.Difficulty</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+
+                <!-- Pagination -->
+                @if (Model.TotalPages > 1)
+                {
+                    <nav class="mt-5 d-flex justify-content-center">
+                        <ul class="pagination">
+                            @for (int p = 1; p <= Model.TotalPages; p++)
+                            {
+                                <li class="page-item @(p == Model.Page ? "active" : "")">
+                                    <a class="page-link" asp-action="Index" asp-route-search="@Model.SearchQuery"
+                                       asp-route-categoryId="@Model.CategoryId" asp-route-ingredient="@Model.IngredientFilter"
+                                       asp-route-page="@p">@p</a>
+                                </li>
+                            }
+                        </ul>
+                    </nav>
+                }
+            }
+        </div>
+
+        <!-- Sidebar -->
+        <div class="col-lg-3">
+            <div class="card sidebar-card mb-4">
+                <div class="card-body">
+                    <h5 class="fw-bold mb-3"><i class="bi bi-tags text-danger me-2"></i>Categories</h5>
+                    <div class="d-flex flex-column gap-1">
+                        <a href="/Recipe" class="d-flex justify-content-between p-2 rounded text-decoration-none text-dark @(Model.CategoryId == null ? "bg-danger text-white" : "bg-light")">
+                            <span>All Recipes</span>
+                        </a>
+                        @foreach (var cat in Model.Categories)
+                        {
+                            <a href="/Recipe?categoryId=@cat.Id@(Model.SearchQuery != null ? "&search=" + Model.SearchQuery : "")"
+                               class="d-flex justify-content-between p-2 rounded text-decoration-none text-dark @(Model.CategoryId == cat.Id ? "bg-danger text-white" : "bg-light")">
+                                <span><i class="bi @(cat.IconClass ?? "bi-tag") me-2"></i>@cat.Name</span>
+                            </a>
+                        }
+                    </div>
+                </div>
+            </div>
+
+            <div class="card sidebar-card">
+                <div class="card-body">
+                    <h5 class="fw-bold mb-3"><i class="bi bi-funnel text-danger me-2"></i>Filter by Ingredient</h5>
+                    <form asp-action="Index" method="get">
+                        <input type="hidden" name="categoryId" value="@Model.CategoryId" />
+                        <input type="hidden" name="search" value="@Model.SearchQuery" />
+                        <input type="text" name="ingredient" class="form-control mb-2" placeholder="e.g. garlic, eggs..." value="@Model.IngredientFilter" />
+                        <button type="submit" class="btn btn-danger btn-sm w-100">Filter</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

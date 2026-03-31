@@ -1,0 +1,174 @@
+@model MT3.Models.ViewModels.CreateRecipeViewModel
+@{
+    ViewData["Title"] = "Edit Recipe";
+}
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="card border-0 shadow-sm rounded-4">
+                <div class="card-header bg-primary text-white rounded-top-4 py-3">
+                    <h3 class="mb-0 fw-bold"><i class="bi bi-pencil me-2"></i>Edit Recipe</h3>
+                </div>
+                <div class="card-body p-4">
+                    <form asp-action="Edit" asp-route-id="@Model.Recipe.Id" method="post" enctype="multipart/form-data">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="Recipe.Id" value="@Model.Recipe.Id" />
+
+                        <h5 class="fw-bold mb-3 text-primary"><i class="bi bi-info-circle me-2"></i>Basic Information</h5>
+                        <div class="row g-3 mb-4">
+                            <div class="col-12">
+                                <label class="form-label fw-semibold">Recipe Title *</label>
+                                <input type="text" name="Recipe.Title" class="form-control form-control-lg" value="@Model.Recipe.Title" required />
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label fw-semibold">Description *</label>
+                                <textarea name="Recipe.Description" class="form-control" rows="3" required>@Model.Recipe.Description</textarea>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label fw-semibold">Category *</label>
+                                <select name="Recipe.CategoryId" class="form-select" required>
+                                    @foreach (var cat in Model.Categories)
+                                    {
+                                        <option value="@cat.Id" selected="@(Model.Recipe.CategoryId == cat.Id)">@cat.Name</option>
+                                    }
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label fw-semibold">Cooking Time (min)</label>
+                                <input type="number" name="Recipe.CookingTime" class="form-control" value="@Model.Recipe.CookingTime" min="1" />
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label fw-semibold">Calories</label>
+                                <input type="number" name="Recipe.Calories" class="form-control" value="@Model.Recipe.Calories" min="0" />
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label fw-semibold">Servings</label>
+                                <input type="number" name="Recipe.Servings" class="form-control" value="@Model.Recipe.Servings" min="1" />
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label fw-semibold">Difficulty</label>
+                                <select name="Recipe.Difficulty" class="form-select">
+                                    <option value="Easy" selected="@(Model.Recipe.Difficulty == "Easy")">Easy</option>
+                                    <option value="Medium" selected="@(Model.Recipe.Difficulty == "Medium")">Medium</option>
+                                    <option value="Hard" selected="@(Model.Recipe.Difficulty == "Hard")">Hard</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label fw-semibold">New Image (optional)</label>
+                                <input type="file" name="ImageFile" class="form-control" accept="image/*" />
+                            </div>
+                            <div class="col-md-5">
+                                <label class="form-label fw-semibold">Current Image URL</label>
+                                <input type="url" name="Recipe.ImageUrl" class="form-control" value="@Model.Recipe.ImageUrl" />
+                            </div>
+                        </div>
+
+                        <hr class="my-4" />
+
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h5 class="fw-bold text-primary mb-0"><i class="bi bi-list-check me-2"></i>Ingredients</h5>
+                            <button type="button" class="btn btn-outline-primary btn-sm rounded-pill" id="addIngredientBtn">
+                                <i class="bi bi-plus me-1"></i>Add
+                            </button>
+                        </div>
+                        <div id="ingredientsList">
+                            @for (int i = 0; i < Model.IngredientInputs.Count; i++)
+                            {
+                                <div class="row g-2 ingredient-row mb-2">
+                                    <div class="col-md-6">
+                                        <select name="IngredientInputs[@i].IngredientId" class="form-select">
+                                            @foreach (var ing in Model.AllIngredients)
+                                            {
+                                                <option value="@ing.Id" selected="@(Model.IngredientInputs[i].IngredientId == ing.Id)">@ing.Name (@ing.Unit)</option>
+                                            }
+                                        </select>
+                                    </div>
+                                    <div class="col-md-5">
+                                        <input type="text" name="IngredientInputs[@i].Quantity" class="form-control" value="@Model.IngredientInputs[i].Quantity" />
+                                    </div>
+                                    <div class="col-md-1">
+                                        <button type="button" class="btn btn-outline-danger btn-sm remove-ingredient w-100"><i class="bi bi-x"></i></button>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+
+                        <hr class="my-4" />
+
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h5 class="fw-bold text-primary mb-0"><i class="bi bi-list-ol me-2"></i>Instructions</h5>
+                            <button type="button" class="btn btn-outline-primary btn-sm rounded-pill" id="addStepBtn">
+                                <i class="bi bi-plus me-1"></i>Add Step
+                            </button>
+                        </div>
+                        <div id="stepsList">
+                            @for (int i = 0; i < Model.StepInputs.Count; i++)
+                            {
+                                <div class="step-row mb-3">
+                                    <div class="d-flex gap-3 align-items-start">
+                                        <div class="step-number mt-1">@(i+1)</div>
+                                        <div class="flex-grow-1">
+                                            <textarea name="StepInputs[@i].Instruction" class="form-control" rows="2">@Model.StepInputs[i].Instruction</textarea>
+                                        </div>
+                                        <button type="button" class="btn btn-outline-danger btn-sm remove-step mt-1"><i class="bi bi-x"></i></button>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+
+                        <hr class="my-4" />
+                        <div class="d-flex gap-3 justify-content-end">
+                            <a asp-action="Details" asp-route-id="@Model.Recipe.Id" class="btn btn-outline-secondary rounded-pill px-4">Cancel</a>
+                            <button type="submit" class="btn btn-primary rounded-pill px-5 fw-semibold">
+                                <i class="bi bi-check-circle me-2"></i>Save Changes
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        const allIngredients = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.AllIngredients.Select(i => new { i.Id, i.Name, Unit = i.Unit ?? "" })));
+        let ingCount = @Model.IngredientInputs.Count;
+        let stepCount = @Model.StepInputs.Count;
+
+        function buildIngredientSelect(index) {
+            let opts = allIngredients.map(i => `<option value="${i.id}">${i.name} (${i.unit})</option>`).join('');
+            return `<select name="IngredientInputs[${index}].IngredientId" class="form-select">${opts}</select>`;
+        }
+
+        document.getElementById('addIngredientBtn').addEventListener('click', function () {
+            const div = document.createElement('div');
+            div.className = 'row g-2 ingredient-row mb-2';
+            div.innerHTML = `<div class="col-md-6">${buildIngredientSelect(ingCount)}</div>
+                <div class="col-md-5"><input type="text" name="IngredientInputs[${ingCount}].Quantity" class="form-control" placeholder="Quantity..." /></div>
+                <div class="col-md-1"><button type="button" class="btn btn-outline-danger btn-sm remove-ingredient w-100"><i class="bi bi-x"></i></button></div>`;
+            document.getElementById('ingredientsList').appendChild(div);
+            ingCount++;
+        });
+
+        document.getElementById('ingredientsList').addEventListener('click', e => {
+            if (e.target.closest('.remove-ingredient')) e.target.closest('.ingredient-row').remove();
+        });
+
+        document.getElementById('addStepBtn').addEventListener('click', function () {
+            const div = document.createElement('div');
+            div.className = 'step-row mb-3';
+            div.innerHTML = `<div class="d-flex gap-3 align-items-start">
+                <div class="step-number mt-1">${stepCount + 1}</div>
+                <div class="flex-grow-1"><textarea name="StepInputs[${stepCount}].Instruction" class="form-control" rows="2"></textarea></div>
+                <button type="button" class="btn btn-outline-danger btn-sm remove-step mt-1"><i class="bi bi-x"></i></button></div>`;
+            document.getElementById('stepsList').appendChild(div);
+            stepCount++;
+        });
+
+        document.getElementById('stepsList').addEventListener('click', e => {
+            if (e.target.closest('.remove-step')) e.target.closest('.step-row').remove();
+        });
+    </script>
+}

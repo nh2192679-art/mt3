@@ -1,0 +1,66 @@
+@model List<MT3.Models.Recipe>
+@{
+    ViewData["Title"] = "Manage Recipes";
+}
+
+<div class="container-fluid py-4 px-4">
+    <div class="d-flex align-items-center gap-3 mb-4">
+        <a asp-action="Index" class="btn btn-outline-secondary rounded-pill btn-sm"><i class="bi bi-arrow-left me-1"></i>Back</a>
+        <h2 class="fw-bold mb-0"><i class="bi bi-journal-richtext text-danger me-2"></i>Recipes (@Model.Count)</h2>
+    </div>
+    <div class="card border-0 shadow-sm rounded-4">
+        <div class="card-body p-4">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Recipe</th>
+                            <th>Category</th>
+                            <th>Author</th>
+                            <th>Status</th>
+                            <th>Created</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var recipe in Model)
+                        {
+                            <tr>
+                                <td>
+                                    <div class="d-flex align-items-center gap-2">
+                                        <img src="@(recipe.ImageUrl ?? "https://images.unsplash.com/photo-1495521821757-a1efb6729352?w=60")"
+                                             class="rounded" width="40" height="40" style="object-fit:cover;" />
+                                        <span class="fw-semibold">@recipe.Title</span>
+                                    </div>
+                                </td>
+                                <td><span class="badge-category">@recipe.Category?.Name</span></td>
+                                <td class="text-muted small">@(recipe.User?.FullName ?? "N/A")</td>
+                                <td>
+                                    <span class="badge @(recipe.IsPublished ? "bg-success" : "bg-secondary")">
+                                        @(recipe.IsPublished ? "Published" : "Hidden")
+                                    </span>
+                                </td>
+                                <td class="text-muted small">@recipe.CreatedAt.ToString("MMM dd")</td>
+                                <td>
+                                    <div class="d-flex gap-1">
+                                        <a asp-controller="Recipe" asp-action="Details" asp-route-id="@recipe.Id" class="btn btn-outline-primary btn-sm">View</a>
+                                        <form asp-action="TogglePublish" method="post" class="d-inline">
+                                            @Html.AntiForgeryToken()
+                                            <input type="hidden" name="id" value="@recipe.Id" />
+                                            <button class="btn btn-outline-warning btn-sm">@(recipe.IsPublished ? "Hide" : "Show")</button>
+                                        </form>
+                                        <form asp-action="DeleteRecipe" method="post" class="d-inline" onsubmit="return confirm('Delete?')">
+                                            @Html.AntiForgeryToken()
+                                            <input type="hidden" name="id" value="@recipe.Id" />
+                                            <button class="btn btn-outline-danger btn-sm">Del</button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
