@@ -1,12 +1,12 @@
 @model List<MT3.Models.Recipe>
 @{
-    ViewData["Title"] = "Manage Recipes";
+    ViewData["Title"] = "Quản lý công thức";
 }
 
 <div class="container-fluid py-4 px-4">
     <div class="d-flex align-items-center gap-3 mb-4">
-        <a asp-action="Index" class="btn btn-outline-secondary rounded-pill btn-sm"><i class="bi bi-arrow-left me-1"></i>Back</a>
-        <h2 class="fw-bold mb-0"><i class="bi bi-journal-richtext text-danger me-2"></i>Recipes (@Model.Count)</h2>
+        <a asp-action="Index" class="btn btn-outline-secondary rounded-pill btn-sm"><i class="bi bi-arrow-left me-1"></i>Quay lại</a>
+        <h2 class="fw-bold mb-0"><i class="bi bi-journal-richtext text-danger me-2"></i>Công thức (@Model.Count)</h2>
     </div>
     <div class="card border-0 shadow-sm rounded-4">
         <div class="card-body p-4">
@@ -14,12 +14,12 @@
                 <table class="table table-hover align-middle">
                     <thead class="table-light">
                         <tr>
-                            <th>Recipe</th>
-                            <th>Category</th>
-                            <th>Author</th>
-                            <th>Status</th>
-                            <th>Created</th>
-                            <th>Actions</th>
+                            <th>Công thức</th>
+                            <th>Danh mục</th>
+                            <th>Tác giả</th>
+                            <th>Trạng thái</th>
+                            <th>Ngày tạo</th>
+                            <th>Hành động</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -37,22 +37,22 @@
                                 <td class="text-muted small">@(recipe.User?.FullName ?? "N/A")</td>
                                 <td>
                                     <span class="badge @(recipe.IsPublished ? "bg-success" : "bg-secondary")">
-                                        @(recipe.IsPublished ? "Published" : "Hidden")
+                                        @(recipe.IsPublished ? "Đã đăng" : "Đã ẩn")
                                     </span>
                                 </td>
-                                <td class="text-muted small">@recipe.CreatedAt.ToString("MMM dd")</td>
+                                <td class="text-muted small">@recipe.CreatedAt.ToString("dd/MM")</td>
                                 <td>
                                     <div class="d-flex gap-1">
-                                        <a asp-controller="Recipe" asp-action="Details" asp-route-id="@recipe.Id" class="btn btn-outline-primary btn-sm">View</a>
+                                        <a asp-controller="Recipe" asp-action="Details" asp-route-id="@recipe.Id" class="btn btn-outline-primary btn-sm">Xem</a>
                                         <form asp-action="TogglePublish" method="post" class="d-inline">
                                             @Html.AntiForgeryToken()
                                             <input type="hidden" name="id" value="@recipe.Id" />
-                                            <button class="btn btn-outline-warning btn-sm">@(recipe.IsPublished ? "Hide" : "Show")</button>
+                                            <button class="btn btn-outline-warning btn-sm">@(recipe.IsPublished ? "Ẩn" : "Hiện")</button>
                                         </form>
-                                        <form asp-action="DeleteRecipe" method="post" class="d-inline" onsubmit="return confirm('Delete?')">
+                                        <form asp-action="DeleteRecipe" method="post" class="d-inline" onsubmit="return confirm('Xóa?')">
                                             @Html.AntiForgeryToken()
                                             <input type="hidden" name="id" value="@recipe.Id" />
-                                            <button class="btn btn-outline-danger btn-sm">Del</button>
+                                            <button class="btn btn-outline-danger btn-sm">Xóa</button>
                                         </form>
                                     </div>
                                 </td>

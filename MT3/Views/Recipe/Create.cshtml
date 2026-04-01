@@ -1,6 +1,6 @@
 @model MT3.Models.ViewModels.CreateRecipeViewModel
 @{
-    ViewData["Title"] = "Create New Recipe";
+    ViewData["Title"] = "Tạo công thức mới";
 }
 
 <div class="container py-5">
@@ -8,27 +8,27 @@
         <div class="col-lg-10">
             <div class="card border-0 shadow-sm rounded-4">
                 <div class="card-header bg-danger text-white rounded-top-4 py-3">
-                    <h3 class="mb-0 fw-bold"><i class="bi bi-plus-circle me-2"></i>Create New Recipe</h3>
+                    <h3 class="mb-0 fw-bold"><i class="bi bi-plus-circle me-2"></i>Tạo công thức mới</h3>
                 </div>
                 <div class="card-body p-4">
                     <form asp-action="Create" method="post" enctype="multipart/form-data" id="recipeForm">
                         @Html.AntiForgeryToken()
 
                         <!-- Basic Info -->
-                        <h5 class="fw-bold mb-3 text-danger"><i class="bi bi-info-circle me-2"></i>Basic Information</h5>
+                        <h5 class="fw-bold mb-3 text-danger"><i class="bi bi-info-circle me-2"></i>Thông tin cơ bản</h5>
                         <div class="row g-3 mb-4">
                             <div class="col-12">
-                                <label class="form-label fw-semibold">Recipe Title *</label>
-                                <input type="text" name="Recipe.Title" class="form-control form-control-lg" placeholder="e.g. Crispy Fried Chicken" required />
+                                <label class="form-label fw-semibold">Tên công thức *</label>
+                                <input type="text" name="Recipe.Title" class="form-control form-control-lg" placeholder="ví dụ: Gà chiên giòn" required />
                             </div>
                             <div class="col-12">
-                                <label class="form-label fw-semibold">Description *</label>
-                                <textarea name="Recipe.Description" class="form-control" rows="3" placeholder="Describe your recipe..." required></textarea>
+                                <label class="form-label fw-semibold">Mô tả *</label>
+                                <textarea name="Recipe.Description" class="form-control" rows="3" placeholder="Mô tả công thức của bạn..." required></textarea>
                             </div>
                             <div class="col-md-3">
-                                <label class="form-label fw-semibold">Category *</label>
+                                <label class="form-label fw-semibold">Danh mục *</label>
                                 <select name="Recipe.CategoryId" class="form-select" required>
-                                    <option value="">Select...</option>
+                                    <option value="">Chọn...</option>
                                     @foreach (var cat in Model.Categories)
                                     {
                                         <option value="@cat.Id">@cat.Name</option>
@@ -36,31 +36,31 @@
                                 </select>
                             </div>
                             <div class="col-md-3">
-                                <label class="form-label fw-semibold">Cooking Time (min)</label>
+                                <label class="form-label fw-semibold">Thời gian nấu (phút)</label>
                                 <input type="number" name="Recipe.CookingTime" class="form-control" value="30" min="1" />
                             </div>
                             <div class="col-md-3">
-                                <label class="form-label fw-semibold">Calories</label>
+                                <label class="form-label fw-semibold">Calo</label>
                                 <input type="number" name="Recipe.Calories" class="form-control" value="300" min="0" />
                             </div>
                             <div class="col-md-3">
-                                <label class="form-label fw-semibold">Servings</label>
+                                <label class="form-label fw-semibold">Khẩu phần</label>
                                 <input type="number" name="Recipe.Servings" class="form-control" value="2" min="1" />
                             </div>
                             <div class="col-md-3">
-                                <label class="form-label fw-semibold">Difficulty</label>
+                                <label class="form-label fw-semibold">Độ khó</label>
                                 <select name="Recipe.Difficulty" class="form-select">
-                                    <option value="Easy">Easy</option>
-                                    <option value="Medium">Medium</option>
-                                    <option value="Hard">Hard</option>
+                                    <option value="Easy">Dễ</option>
+                                    <option value="Medium">Trung bình</option>
+                                    <option value="Hard">Khó</option>
                                 </select>
                             </div>
                             <div class="col-md-5">
-                                <label class="form-label fw-semibold">Recipe Image</label>
+                                <label class="form-label fw-semibold">Ảnh công thức</label>
                                 <input type="file" name="ImageFile" class="form-control" accept="image/*" id="imageFile" />
                             </div>
                             <div class="col-md-4">
-                                <label class="form-label fw-semibold">Or Image URL</label>
+                                <label class="form-label fw-semibold">Hoặc URL ảnh</label>
                                 <input type="url" name="Recipe.ImageUrl" class="form-control" placeholder="https://..." />
                             </div>
                         </div>
@@ -69,16 +69,16 @@
 
                         <!-- Ingredients -->
                         <div class="d-flex justify-content-between align-items-center mb-3">
-                            <h5 class="fw-bold text-danger mb-0"><i class="bi bi-list-check me-2"></i>Ingredients</h5>
+                            <h5 class="fw-bold text-danger mb-0"><i class="bi bi-list-check me-2"></i>Nguyên liệu</h5>
                             <button type="button" class="btn btn-outline-danger btn-sm rounded-pill" id="addIngredientBtn">
-                                <i class="bi bi-plus me-1"></i>Add Ingredient
+                                <i class="bi bi-plus me-1"></i>Thêm nguyên liệu
                             </button>
                         </div>
                         <div id="ingredientsList">
                             <div class="row g-2 ingredient-row mb-2">
                                 <div class="col-md-6">
                                     <select name="IngredientInputs[0].IngredientId" class="form-select">
-                                        <option value="0">Select ingredient...</option>
+                                        <option value="0">Chọn nguyên liệu...</option>
                                         @foreach (var ing in Model.AllIngredients)
                                         {
                                             <option value="@ing.Id">@ing.Name (@ing.Unit)</option>
@@ -86,7 +86,7 @@
                                     </select>
                                 </div>
                                 <div class="col-md-5">
-                                    <input type="text" name="IngredientInputs[0].Quantity" class="form-control" placeholder="e.g. 2 cups, 300g..." />
+                                    <input type="text" name="IngredientInputs[0].Quantity" class="form-control" placeholder="ví dụ: 2 chén, 300g..." />
                                 </div>
                                 <div class="col-md-1">
                                     <button type="button" class="btn btn-outline-danger btn-sm remove-ingredient w-100"><i class="bi bi-x"></i></button>
@@ -98,9 +98,9 @@
 
                         <!-- Steps -->
                         <div class="d-flex justify-content-between align-items-center mb-3">
-                            <h5 class="fw-bold text-danger mb-0"><i class="bi bi-list-ol me-2"></i>Instructions</h5>
+                            <h5 class="fw-bold text-danger mb-0"><i class="bi bi-list-ol me-2"></i>Hướng dẫn</h5>
                             <button type="button" class="btn btn-outline-danger btn-sm rounded-pill" id="addStepBtn">
-                                <i class="bi bi-plus me-1"></i>Add Step
+                                <i class="bi bi-plus me-1"></i>Thêm bước
                             </button>
                         </div>
                         <div id="stepsList">
@@ -108,7 +108,7 @@
                                 <div class="d-flex gap-3 align-items-start">
                                     <div class="step-number mt-1">1</div>
                                     <div class="flex-grow-1">
-                                        <textarea name="StepInputs[0].Instruction" class="form-control" rows="2" placeholder="Describe this step..."></textarea>
+                                        <textarea name="StepInputs[0].Instruction" class="form-control" rows="2" placeholder="Mô tả bước này..."></textarea>
                                     </div>
                                     <button type="button" class="btn btn-outline-danger btn-sm remove-step mt-1"><i class="bi bi-x"></i></button>
                                 </div>
@@ -118,9 +118,9 @@
                         <hr class="my-4" />
 
                         <div class="d-flex gap-3 justify-content-end">
-                            <a asp-action="Index" class="btn btn-outline-secondary rounded-pill px-4">Cancel</a>
+                            <a asp-action="Index" class="btn btn-outline-secondary rounded-pill px-4">Hủy</a>
                             <button type="submit" class="btn btn-danger rounded-pill px-5 fw-semibold">
-                                <i class="bi bi-check-circle me-2"></i>Publish Recipe
+                                <i class="bi bi-check-circle me-2"></i>Đăng công thức
                             </button>
                         </div>
                     </form>
@@ -132,10 +132,13 @@
 
 @section Scripts {
     <script>
-        const allIngredients = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.AllIngredients.Select(i => new { i.Id, i.Name, Unit = i.Unit ?? "" })));
+        const allIngredients = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(
+            Model.AllIngredients.Select(i => new { id = i.Id, name = i.Name, unit = i.Unit ?? "" }),
+            new System.Text.Json.JsonSerializerOptions { PropertyNamingPolicy = System.Text.Json.JsonNamingPolicy.CamelCase }
+        ));
 
         function buildIngredientSelect(index, selectedId) {
-            let opts = `<option value="0">Select ingredient...</option>`;
+            let opts = `<option value="0">Chọn nguyên liệu...</option>`;
             allIngredients.forEach(i => {
                 opts += `<option value="${i.id}" ${i.id == selectedId ? 'selected' : ''}>${i.name} (${i.unit})</option>`;
             });
@@ -148,7 +151,7 @@
             div.className = 'row g-2 ingredient-row mb-2';
             div.innerHTML = `
                 <div class="col-md-6">${buildIngredientSelect(ingCount, 0)}</div>
-                <div class="col-md-5"><input type="text" name="IngredientInputs[${ingCount}].Quantity" class="form-control" placeholder="e.g. 2 cups..." /></div>
+                <div class="col-md-5"><input type="text" name="IngredientInputs[${ingCount}].Quantity" class="form-control" placeholder="ví dụ: 2 chén..." /></div>
                 <div class="col-md-1"><button type="button" class="btn btn-outline-danger btn-sm remove-ingredient w-100"><i class="bi bi-x"></i></button></div>`;
             document.getElementById('ingredientsList').appendChild(div);
             ingCount++;
@@ -165,7 +168,7 @@
             div.innerHTML = `
                 <div class="d-flex gap-3 align-items-start">
                     <div class="step-number mt-1">${stepCount + 1}</div>
-                    <div class="flex-grow-1"><textarea name="StepInputs[${stepCount}].Instruction" class="form-control" rows="2" placeholder="Describe this step..."></textarea></div>
+                    <div class="flex-grow-1"><textarea name="StepInputs[${stepCount}].Instruction" class="form-control" rows="2" placeholder="Mô tả bước này..."></textarea></div>
                     <button type="button" class="btn btn-outline-danger btn-sm remove-step mt-1"><i class="bi bi-x"></i></button>
                 </div>`;
             document.getElementById('stepsList').appendChild(div);

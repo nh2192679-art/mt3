@@ -8,8 +8,8 @@
 @if (recipe == null)
 {
     <div class="container py-5 text-center">
-        <h3>Recipe not found</h3>
-        <a asp-action="Index" class="btn btn-danger">Back to Recipes</a>
+        <h3>Không tìm thấy công thức</h3>
+        <a asp-action="Index" class="btn btn-danger">Quay lại</a>
     </div>
     return;
 }
@@ -34,19 +34,19 @@
                 <div class="d-flex align-items-center gap-4 text-muted flex-wrap mb-3">
                     <span><i class="bi bi-clock me-1 text-danger"></i>@recipe.CookingTime min</span>
                     <span><i class="bi bi-fire me-1 text-warning"></i>@recipe.Calories kcal</span>
-                    <span><i class="bi bi-people me-1 text-info"></i>@recipe.Servings servings</span>
+                    <span><i class="bi bi-people me-1 text-info"></i>@recipe.Servings khẩu phần</span>
                     <div class="stars">
                         @for (int i = 1; i <= 5; i++)
                         {
                             <i class="bi @(i <= Math.Round(avgRating) ? "bi-star-fill" : "bi-star")"></i>
                         }
-                        <span class="text-muted small ms-1">@avgRating.ToString("F1") (@recipe.RatingCount reviews)</span>
+                        <span class="text-muted small ms-1">@avgRating.ToString("F1") (@recipe.RatingCount đánh giá)</span>
                     </div>
                 </div>
                 <p class="lead text-muted">@recipe.Description</p>
                 <small class="text-muted">
-                    <i class="bi bi-person me-1"></i>By <strong>@(recipe.User?.FullName ?? recipe.User?.UserName ?? "Unknown")</strong>
-                    · <i class="bi bi-calendar me-1"></i>@recipe.CreatedAt.ToString("MMM dd, yyyy")
+                    <i class="bi bi-person me-1"></i>Bởi <strong>@(recipe.User?.FullName ?? recipe.User?.UserName ?? "Không rõ")</strong>
+                    · <i class="bi bi-calendar me-1"></i>@recipe.CreatedAt.ToString("dd/MM/yyyy")
                 </small>
             </div>
 
@@ -59,39 +59,39 @@
                         <input type="hidden" name="recipeId" value="@recipe.Id" />
                         <button type="submit" class="btn @(Model.IsFavorited ? "btn-danger" : "btn-outline-danger") rounded-pill">
                             <i class="bi @(Model.IsFavorited ? "bi-heart-fill" : "bi-heart") me-1"></i>
-                            @(Model.IsFavorited ? "Saved" : "Save Recipe")
+                            @(Model.IsFavorited ? "Đã lưu" : "Lưu công thức")
                         </button>
                     </form>
                     <form asp-controller="ShoppingList" asp-action="AddFromRecipe" method="post" class="d-inline">
                         @Html.AntiForgeryToken()
                         <input type="hidden" name="recipeId" value="@recipe.Id" />
                         <button type="submit" class="btn btn-outline-success rounded-pill">
-                            <i class="bi bi-cart-plus me-1"></i>Add to Shopping List
+                            <i class="bi bi-cart-plus me-1"></i>Thêm vào danh sách mua
                         </button>
                     </form>
                     @if (recipe.UserId == User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value || User.IsInRole("Admin"))
                     {
                         <a asp-action="Edit" asp-route-id="@recipe.Id" class="btn btn-outline-primary rounded-pill">
-                            <i class="bi bi-pencil me-1"></i>Edit
+                            <i class="bi bi-pencil me-1"></i>Chỉnh sửa
                         </a>
-                        <form asp-action="Delete" method="post" class="d-inline" onsubmit="return confirm('Delete this recipe?')">
+                        <form asp-action="Delete" method="post" class="d-inline" onsubmit="return confirm('Xóa công thức này?')">
                             @Html.AntiForgeryToken()
                             <input type="hidden" name="id" value="@recipe.Id" />
-                            <button type="submit" class="btn btn-outline-danger rounded-pill"><i class="bi bi-trash me-1"></i>Delete</button>
+                            <button type="submit" class="btn btn-outline-danger rounded-pill"><i class="bi bi-trash me-1"></i>Xóa</button>
                         </form>
                     }
                 }
                 else
                 {
                     <a asp-controller="Account" asp-action="Login" class="btn btn-outline-danger rounded-pill">
-                        <i class="bi bi-heart me-1"></i>Save Recipe
+                        <i class="bi bi-heart me-1"></i>Lưu công thức
                     </a>
                 }
             </div>
 
             <!-- Ingredients -->
             <div class="mb-5">
-                <h3 class="fw-bold mb-4"><i class="bi bi-list-check text-danger me-2"></i>Ingredients</h3>
+                <h3 class="fw-bold mb-4"><i class="bi bi-list-check text-danger me-2"></i>Nguyên liệu</h3>
                 @if (recipe.RecipeIngredients.Any())
                 {
                     <div class="row g-2">
@@ -109,13 +109,13 @@
                 }
                 else
                 {
-                    <p class="text-muted">No ingredients listed.</p>
+                    <p class="text-muted">Chưa có nguyên liệu.</p>
                 }
             </div>
 
             <!-- Steps -->
             <div class="mb-5">
-                <h3 class="fw-bold mb-4"><i class="bi bi-list-ol text-danger me-2"></i>Instructions</h3>
+                <h3 class="fw-bold mb-4"><i class="bi bi-list-ol text-danger me-2"></i>Hướng dẫn</h3>
                 @if (recipe.Steps.Any())
                 {
                     @foreach (var step in recipe.Steps.OrderBy(s => s.StepNumber))
@@ -130,7 +130,7 @@
                 }
                 else
                 {
-                    <p class="text-muted">No steps provided.</p>
+                    <p class="text-muted">Chưa có hướng dẫn.</p>
                 }
             </div>
 
@@ -138,7 +138,7 @@
             @if (User.Identity?.IsAuthenticated == true)
             {
                 <div class="card border-0 bg-light rounded-4 p-4 mb-5">
-                    <h4 class="fw-bold mb-3"><i class="bi bi-star text-warning me-2"></i>Rate this Recipe</h4>
+                    <h4 class="fw-bold mb-3"><i class="bi bi-star text-warning me-2"></i>Đánh giá công thức</h4>
                     <form asp-action="Rate" method="post" class="d-flex align-items-center gap-3">
                         @Html.AntiForgeryToken()
                         <input type="hidden" name="recipeId" value="@recipe.Id" />
@@ -150,19 +150,19 @@
                             }
                         </div>
                         <button type="submit" class="btn btn-warning rounded-pill px-4">
-                            @(Model.UserRating.HasValue ? "Update Rating" : "Submit Rating")
+                            @(Model.UserRating.HasValue ? "Cập nhật đánh giá" : "Gửi đánh giá")
                         </button>
                     </form>
                     @if (Model.UserRating.HasValue)
                     {
-                        <small class="text-muted mt-2">Your current rating: @Model.UserRating ⭐</small>
+                        <small class="text-muted mt-2">Đánh giá của bạn: @Model.UserRating ⭐</small>
                     }
                 </div>
             }
 
             <!-- Comments -->
             <div class="mb-5">
-                <h3 class="fw-bold mb-4"><i class="bi bi-chat-dots text-danger me-2"></i>Comments (@recipe.Comments.Count)</h3>
+                <h3 class="fw-bold mb-4"><i class="bi bi-chat-dots text-danger me-2"></i>Bình luận (@recipe.Comments.Count)</h3>
 
                 @if (User.Identity?.IsAuthenticated == true)
                 {
@@ -173,8 +173,8 @@
                             <img src="https://ui-avatars.com/api/?name=@Uri.EscapeDataString(User.Identity.Name ?? "U")&background=e84118&color=fff"
                                  class="rounded-circle" width="40" height="40" />
                             <div class="flex-grow-1">
-                                <textarea name="content" class="form-control rounded-4" rows="3" placeholder="Share your experience or tips..." required></textarea>
-                                <button type="submit" class="btn btn-danger btn-sm mt-2 rounded-pill px-4">Post Comment</button>
+                                <textarea name="content" class="form-control rounded-4" rows="3" placeholder="Chia sẻ trải nghiệm hoặc mẹo nấu ăn..." required></textarea>
+                                <button type="submit" class="btn btn-danger btn-sm mt-2 rounded-pill px-4">Đăng bình luận</button>
                             </div>
                         </div>
                     </form>
@@ -187,10 +187,10 @@
                              class="rounded-circle" width="42" height="42" />
                         <div class="flex-grow-1">
                             <div class="bg-light rounded-4 p-3">
-                                <div class="fw-semibold mb-1">@(comment.User?.FullName ?? comment.User?.UserName ?? "Anonymous")</div>
+                                <div class="fw-semibold mb-1">@(comment.User?.FullName ?? comment.User?.UserName ?? "Nặc danh")</div>
                                 <p class="mb-0 text-muted">@comment.Content</p>
                             </div>
-                            <small class="text-muted ms-2">@comment.CreatedAt.ToString("MMM dd, yyyy HH:mm")</small>
+                            <small class="text-muted ms-2">@comment.CreatedAt.ToString("dd/MM/yyyy HH:mm")</small>
                         </div>
                     </div>
                 }
@@ -202,30 +202,30 @@
             <!-- Nutrition Card -->
             <div class="card sidebar-card mb-4">
                 <div class="card-body">
-                    <h5 class="fw-bold mb-3"><i class="bi bi-heart-pulse text-danger me-2"></i>Nutrition Info</h5>
+                    <h5 class="fw-bold mb-3"><i class="bi bi-heart-pulse text-danger me-2"></i>Thông tin dinh dưỡng</h5>
                     <div class="row g-3 text-center">
                         <div class="col-6">
                             <div class="p-3 bg-light rounded-3">
                                 <div class="fw-bold fs-4 text-danger">@recipe.Calories</div>
-                                <small class="text-muted">Calories</small>
+                                <small class="text-muted">Calo</small>
                             </div>
                         </div>
                         <div class="col-6">
                             <div class="p-3 bg-light rounded-3">
                                 <div class="fw-bold fs-4 text-info">@recipe.CookingTime</div>
-                                <small class="text-muted">Minutes</small>
+                                <small class="text-muted">Phút</small>
                             </div>
                         </div>
                         <div class="col-6">
                             <div class="p-3 bg-light rounded-3">
                                 <div class="fw-bold fs-4 text-success">@recipe.Servings</div>
-                                <small class="text-muted">Servings</small>
+                                <small class="text-muted">Khẩu phần</small>
                             </div>
                         </div>
                         <div class="col-6">
                             <div class="p-3 bg-light rounded-3">
                                 <div class="fw-bold fs-4 text-warning">@avgRating.ToString("F1")</div>
-                                <small class="text-muted">Rating</small>
+                                <small class="text-muted">Đánh giá</small>
                             </div>
                         </div>
                     </div>
@@ -237,7 +237,7 @@
             {
                 <div class="card sidebar-card">
                     <div class="card-body">
-                        <h5 class="fw-bold mb-3"><i class="bi bi-grid text-danger me-2"></i>Related Recipes</h5>
+                        <h5 class="fw-bold mb-3"><i class="bi bi-grid text-danger me-2"></i>Công thức liên quan</h5>
                         @foreach (var rel in Model.RelatedRecipes)
                         {
                             <a href="/Recipe/Details/@rel.Id" class="d-flex gap-3 mb-3 text-decoration-none text-dark">

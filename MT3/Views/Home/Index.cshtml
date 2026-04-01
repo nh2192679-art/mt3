@@ -1,6 +1,6 @@
 ﻿@model MT3.Models.ViewModels.HomeViewModel
 @{
-    ViewData["Title"] = "Home - Discover Amazing Recipes";
+    ViewData["Title"] = "Trang chủ - Khám phá công thức tuyệt vời";
 }
 
 <!-- Hero Section -->
@@ -8,14 +8,14 @@
     <div class="container position-relative" style="z-index:1">
         <div class="row align-items-center">
             <div class="col-lg-7">
-                <p class="text-warning fw-semibold mb-2 fs-5"><i class="bi bi-fire me-2"></i>Welcome to ChefVN</p>
-                <h1 class="display-4 fw-bold font-display mb-3">What do you want<br>to cook today? 🍳</h1>
-                <p class="lead mb-4 opacity-90">Discover thousands of recipes from home cooks and professional chefs around Vietnam.</p>
+                <p class="text-warning fw-semibold mb-2 fs-5"><i class="bi bi-fire me-2"></i>Chào mừng đến với ChefVN</p>
+                <h1 class="display-4 fw-bold font-display mb-3">Hôm nay bạn muốn nấu gì? 🍳</h1>
+                <p class="lead mb-4 opacity-90">Khám phá hàng nghìn công thức từ các đầu bếp gia đình và chuyên nghiệp khắp Việt Nam.</p>
                 <form asp-controller="Recipe" asp-action="Index" method="get" class="d-flex gap-2 flex-wrap">
                     <input type="search" name="search" class="form-control form-control-lg flex-grow-1 rounded-pill"
-                           placeholder="Search by recipe name or ingredient..." style="max-width:420px;" />
+                           placeholder="Tìm kiếm theo tên món ăn hoặc nguyên liệu..." style="max-width:420px;" />
                     <button type="submit" class="btn btn-warning btn-lg rounded-pill px-4 fw-bold">
-                        <i class="bi bi-search me-2"></i>Search
+                        <i class="bi bi-search me-2"></i>Tìm kiếm
                     </button>
                 </form>
             </div>
@@ -25,7 +25,7 @@
                         <img src="https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=500" alt="Cooking" style="width:100%;height:100%;object-fit:cover;" />
                     </div>
                     <div class="position-absolute bg-white rounded-3 shadow p-3 text-dark" style="bottom:-20px;left:-30px;">
-                        <i class="bi bi-star-fill text-warning me-1"></i><strong>4.8</strong> avg rating
+                        <i class="bi bi-star-fill text-warning me-1"></i><strong>4.8</strong> điểm đánh giá
                     </div>
                     <div class="position-absolute bg-white rounded-3 shadow p-3 text-dark" style="top:20px;right:-30px;">
                         <i class="bi bi-journal-richtext text-danger me-1"></i><strong>@Model.FeaturedRecipes.Count+</strong> recipes
@@ -41,7 +41,7 @@
     <div class="container">
         <div class="d-flex align-items-center gap-3 flex-wrap">
             <a href="/Recipe" class="category-pill active">
-                <i class="bi bi-grid me-1"></i>All
+                <i class="bi bi-grid me-1"></i>Tất cả
             </a>
             @foreach (var cat in Model.Categories)
             {
@@ -60,8 +60,8 @@
             <!-- Recipe Grid -->
             <div class="col-lg-9">
                 <div class="d-flex justify-content-between align-items-center mb-4">
-                    <h2 class="fw-bold font-display mb-0">✨ Featured Recipes</h2>
-                    <a href="/Recipe" class="btn btn-outline-danger rounded-pill">View All <i class="bi bi-arrow-right ms-1"></i></a>
+                    <h2 class="fw-bold font-display mb-0">✨ Công thức nổi bật</h2>
+                    <a href="/Recipe" class="btn btn-outline-danger rounded-pill">Xem tất cả <i class="bi bi-arrow-right ms-1"></i></a>
                 </div>
                 <div class="row g-4">
                     @foreach (var recipe in Model.FeaturedRecipes)
@@ -105,7 +105,7 @@
                 <!-- Trending -->
                 <div class="card sidebar-card mb-4">
                     <div class="card-body">
-                        <h5 class="fw-bold mb-3"><i class="bi bi-graph-up-arrow text-danger me-2"></i>Trending</h5>
+                        <h5 class="fw-bold mb-3"><i class="bi bi-graph-up-arrow text-danger me-2"></i>Xu hướng</h5>
                         @foreach (var (recipe, idx) in Model.TrendingRecipes.Select((r,i) => (r,i+1)))
                         {
                             <a href="/Recipe/Details/@recipe.Id" class="d-flex align-items-center gap-3 mb-3 text-decoration-none text-dark">
@@ -124,7 +124,7 @@
                 <!-- Categories -->
                 <div class="card sidebar-card mb-4">
                     <div class="card-body">
-                        <h5 class="fw-bold mb-3"><i class="bi bi-tags text-danger me-2"></i>Categories</h5>
+                        <h5 class="fw-bold mb-3"><i class="bi bi-tags text-danger me-2"></i>Danh mục</h5>
                         <div class="d-flex flex-column gap-2">
                             @foreach (var cat in Model.Categories)
                             {
@@ -140,9 +140,9 @@
                 <!-- Quick Links -->
                 <div class="card sidebar-card" style="background:linear-gradient(135deg,#e84118,#f39c12);">
                     <div class="card-body text-white">
-                        <h5 class="fw-bold mb-2"><i class="bi bi-plus-circle me-2"></i>Share Your Recipe</h5>
-                        <p class="small mb-3 opacity-90">Join our community and share your favorite dishes!</p>
-                        <a href="/Recipe/Create" class="btn btn-light btn-sm fw-semibold w-100">Get Started</a>
+                        <h5 class="fw-bold mb-2"><i class="bi bi-plus-circle me-2"></i>Chia sẻ công thức</h5>
+                        <p class="small mb-3 opacity-90">Tham gia cộng đồng và chia sẻ món ăn yêu thích của bạn!</p>
+                        <a href="/Recipe/Create" class="btn btn-light btn-sm fw-semibold w-100">Bắt đầu ngay</a>
                     </div>
                 </div>
             </div>
@@ -157,25 +157,25 @@
             <div class="col-md-3">
                 <div class="p-3">
                     <div class="display-5 fw-bold text-danger">10+</div>
-                    <div class="text-muted">Recipes</div>
+                    <div class="text-muted">Công thức</div>
                 </div>
             </div>
             <div class="col-md-3">
                 <div class="p-3">
                     <div class="display-5 fw-bold text-warning">5</div>
-                    <div class="text-muted">Categories</div>
+                    <div class="text-muted">Danh mục</div>
                 </div>
             </div>
             <div class="col-md-3">
                 <div class="p-3">
                     <div class="display-5 fw-bold text-success">20+</div>
-                    <div class="text-muted">Ingredients</div>
+                    <div class="text-muted">Nguyên liệu</div>
                 </div>
             </div>
             <div class="col-md-3">
                 <div class="p-3">
                     <div class="display-5 fw-bold text-info">100%</div>
-                    <div class="text-muted">Free to use</div>
+                    <div class="text-muted">Miễn phí</div>
                 </div>
             </div>
         </div>

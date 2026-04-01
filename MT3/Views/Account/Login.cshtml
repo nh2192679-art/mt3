@@ -1,5 +1,5 @@
 @{
-    ViewData["Title"] = "Login";
+    ViewData["Title"] = "Đăng nhập";
 }
 
 <div class="min-vh-100 d-flex align-items-center" style="background:linear-gradient(135deg,#c0392b,#e84118,#f39c12);">
@@ -12,7 +12,7 @@
                             <a asp-controller="Home" asp-action="Index" class="text-decoration-none">
                                 <h2 class="fw-bold text-danger"><i class="bi bi-fire me-2 text-warning"></i>Chef<span class="text-dark">VN</span></h2>
                             </a>
-                            <p class="text-muted">Welcome back, chef! 👨‍🍳</p>
+                            <p class="text-muted">Chào mừng trở lại, đầu bếp! 👨‍🍳</p>
                         </div>
 
                         @if (!ViewData.ModelState.IsValid)
@@ -36,7 +36,7 @@
                                 </div>
                             </div>
                             <div class="mb-4">
-                                <label class="form-label fw-semibold">Password</label>
+                                <label class="form-label fw-semibold">Mật khẩu</label>
                                 <div class="input-group">
                                     <span class="input-group-text bg-light border-end-0"><i class="bi bi-lock text-muted"></i></span>
                                     <input type="password" name="password" class="form-control border-start-0" placeholder="••••••••" required />
@@ -45,22 +45,22 @@
                             <div class="d-flex justify-content-between align-items-center mb-4">
                                 <div class="form-check">
                                     <input class="form-check-input" type="checkbox" name="rememberMe" id="rememberMe" />
-                                    <label class="form-check-label text-muted small" for="rememberMe">Remember me</label>
+                                    <label class="form-check-label text-muted small" for="rememberMe">Ghi nhớ đăng nhập</label>
                                 </div>
                             </div>
                             <button type="submit" class="btn btn-danger w-100 btn-lg rounded-pill fw-semibold">
-                                <i class="bi bi-box-arrow-in-right me-2"></i>Login
+                                <i class="bi bi-box-arrow-in-right me-2"></i>Đăng nhập
                             </button>
                         </form>
 
                         <hr class="my-4" />
                         <div class="bg-light rounded-3 p-3 mb-3">
-                            <p class="small mb-1 fw-semibold">Demo Accounts:</p>
+                            <p class="small mb-1 fw-semibold">Tài khoản Demo:</p>
                             <p class="small mb-1 text-muted"><i class="bi bi-shield me-1"></i>admin@chefvn.com / Admin@123</p>
                             <p class="small mb-0 text-muted"><i class="bi bi-person me-1"></i>chef@chefvn.com / Chef@123</p>
                         </div>
                         <p class="text-center text-muted mb-0">
-                            Don't have an account? <a asp-action="Register" class="text-danger fw-semibold">Sign up free</a>
+                            Chưa có tài khoản? <a asp-action="Register" class="text-danger fw-semibold">Đăng ký miễn phí</a>
                         </p>
                     </div>
                 </div>

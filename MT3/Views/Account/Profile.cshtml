@@ -1,6 +1,6 @@
 @model MT3.Models.ApplicationUser
 @{
-    ViewData["Title"] = "Profile";
+    ViewData["Title"] = "Hồ sơ";
 }
 
 <div class="container py-5">
@@ -15,35 +15,35 @@
                 {
                     <p class="text-muted small">@Model.Bio</p>
                 }
-                <p class="text-muted small">Member since @Model?.JoinedAt.ToString("MMMM yyyy")</p>
+                <p class="text-muted small">Thành viên từ @Model?.JoinedAt.ToString("MM/yyyy")</p>
             </div>
         </div>
         <div class="col-lg-8">
             <div class="card border-0 shadow-sm rounded-4 p-4">
-                <h4 class="fw-bold mb-4"><i class="bi bi-pencil-square text-danger me-2"></i>Edit Profile</h4>
+                <h4 class="fw-bold mb-4"><i class="bi bi-pencil-square text-danger me-2"></i>Chỉnh sửa hồ sơ</h4>
                 <form asp-action="UpdateProfile" method="post">
                     @Html.AntiForgeryToken()
                     <div class="mb-3">
-                        <label class="form-label fw-semibold">Full Name</label>
+                        <label class="form-label fw-semibold">Họ và tên</label>
                         <input type="text" name="fullName" class="form-control" value="@Model?.FullName" required />
                     </div>
                     <div class="mb-3">
-                        <label class="form-label fw-semibold">Bio</label>
-                        <textarea name="bio" class="form-control" rows="3" placeholder="Tell us about yourself...">@Model?.Bio</textarea>
+                        <label class="form-label fw-semibold">Tiểu sử</label>
+                        <textarea name="bio" class="form-control" rows="3" placeholder="Giới thiệu về bạn...">@Model?.Bio</textarea>
                     </div>
-                    <button type="submit" class="btn btn-danger rounded-pill px-4">Save Changes</button>
+                    <button type="submit" class="btn btn-danger rounded-pill px-4">Lưu thay đổi</button>
                 </form>
 
                 <hr class="my-4" />
                 <div class="d-flex gap-3 flex-wrap">
                     <a asp-controller="Recipe" asp-action="MyRecipes" class="btn btn-outline-danger rounded-pill">
-                        <i class="bi bi-journal-richtext me-2"></i>My Recipes
+                        <i class="bi bi-journal-richtext me-2"></i>Công thức của tôi
                     </a>
                     <a asp-controller="Recipe" asp-action="Favorites" class="btn btn-outline-danger rounded-pill">
-                        <i class="bi bi-heart me-2"></i>Saved Recipes
+                        <i class="bi bi-heart me-2"></i>Công thức yêu thích
                     </a>
                     <a asp-controller="MealPlan" asp-action="Index" class="btn btn-outline-danger rounded-pill">
-                        <i class="bi bi-calendar3 me-2"></i>Meal Planner
+                        <i class="bi bi-calendar3 me-2"></i>Lịch ăn
                     </a>
                 </div>
             </div>

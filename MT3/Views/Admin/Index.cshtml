@@ -1,12 +1,12 @@
 @model MT3.Models.ViewModels.AdminDashboardViewModel
 @{
-    ViewData["Title"] = "Admin Dashboard";
+    ViewData["Title"] = "Bảng điều khiển";
 }
 
 <div class="container-fluid py-4 px-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2 class="fw-bold font-display mb-0"><i class="bi bi-shield-lock text-danger me-2"></i>Admin Dashboard</h2>
-        <span class="badge bg-danger">Administrator</span>
+        <h2 class="fw-bold font-display mb-0"><i class="bi bi-shield-lock text-danger me-2"></i>Bảng điều khiển</h2>
+        <span class="badge bg-danger">Quản trị viên</span>
     </div>
 
     <!-- Stats Cards -->
@@ -15,28 +15,28 @@
             <div class="admin-stat-card" style="background:linear-gradient(135deg,#e84118,#c0392b);">
                 <i class="bi bi-journal-richtext display-6 mb-2"></i>
                 <div class="display-5 fw-bold">@Model.TotalRecipes</div>
-                <div>Total Recipes</div>
+                <div>Tổng công thức</div>
             </div>
         </div>
         <div class="col-md-3">
             <div class="admin-stat-card" style="background:linear-gradient(135deg,#3498db,#2980b9);">
                 <i class="bi bi-people display-6 mb-2"></i>
                 <div class="display-5 fw-bold">@Model.TotalUsers</div>
-                <div>Total Users</div>
+                <div>Tổng người dùng</div>
             </div>
         </div>
         <div class="col-md-3">
             <div class="admin-stat-card" style="background:linear-gradient(135deg,#2ecc71,#27ae60);">
                 <i class="bi bi-chat-dots display-6 mb-2"></i>
                 <div class="display-5 fw-bold">@Model.TotalComments</div>
-                <div>Comments</div>
+                <div>Bình luận</div>
             </div>
         </div>
         <div class="col-md-3">
             <div class="admin-stat-card" style="background:linear-gradient(135deg,#f39c12,#e67e22);">
                 <i class="bi bi-tags display-6 mb-2"></i>
                 <div class="display-5 fw-bold">@Model.TotalCategories</div>
-                <div>Categories</div>
+                <div>Danh mục</div>
             </div>
         </div>
     </div>
@@ -46,28 +46,28 @@
         <div class="col-md-3">
             <a asp-action="Recipes" class="card border-0 shadow-sm rounded-4 p-3 text-decoration-none text-dark d-flex flex-row align-items-center gap-3">
                 <i class="bi bi-journal-richtext fs-3 text-danger"></i>
-                <span class="fw-semibold">Manage Recipes</span>
+                <span class="fw-semibold">Quản lý công thức</span>
                 <i class="bi bi-arrow-right ms-auto text-muted"></i>
             </a>
         </div>
         <div class="col-md-3">
             <a asp-action="Users" class="card border-0 shadow-sm rounded-4 p-3 text-decoration-none text-dark d-flex flex-row align-items-center gap-3">
                 <i class="bi bi-people fs-3 text-primary"></i>
-                <span class="fw-semibold">Manage Users</span>
+                <span class="fw-semibold">Quản lý người dùng</span>
                 <i class="bi bi-arrow-right ms-auto text-muted"></i>
             </a>
         </div>
         <div class="col-md-3">
             <a asp-action="Categories" class="card border-0 shadow-sm rounded-4 p-3 text-decoration-none text-dark d-flex flex-row align-items-center gap-3">
                 <i class="bi bi-tags fs-3 text-warning"></i>
-                <span class="fw-semibold">Categories</span>
+                <span class="fw-semibold">Danh mục</span>
                 <i class="bi bi-arrow-right ms-auto text-muted"></i>
             </a>
         </div>
         <div class="col-md-3">
             <a asp-action="Comments" class="card border-0 shadow-sm rounded-4 p-3 text-decoration-none text-dark d-flex flex-row align-items-center gap-3">
                 <i class="bi bi-chat-dots fs-3 text-success"></i>
-                <span class="fw-semibold">Manage Comments</span>
+                <span class="fw-semibold">Quản lý bình luận</span>
                 <i class="bi bi-arrow-right ms-auto text-muted"></i>
             </a>
         </div>
@@ -76,17 +76,17 @@
     <!-- Recent Recipes -->
     <div class="card border-0 shadow-sm rounded-4 mb-4">
         <div class="card-body p-4">
-            <h5 class="fw-bold mb-4"><i class="bi bi-clock-history text-danger me-2"></i>Recent Recipes</h5>
+            <h5 class="fw-bold mb-4"><i class="bi bi-clock-history text-danger me-2"></i>Công thức gần đây</h5>
             <div class="table-responsive">
                 <table class="table table-hover align-middle">
                     <thead class="table-light">
                         <tr>
-                            <th>Recipe</th>
-                            <th>Category</th>
-                            <th>Author</th>
-                            <th>Status</th>
-                            <th>Date</th>
-                            <th>Actions</th>
+                            <th>Công thức</th>
+                            <th>Danh mục</th>
+                            <th>Tác giả</th>
+                            <th>Trạng thái</th>
+                            <th>Ngày</th>
+                            <th>Hành động</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -104,22 +104,22 @@
                                 <td>@(recipe.User?.FullName ?? recipe.User?.Email ?? "N/A")</td>
                                 <td>
                                     <span class="badge @(recipe.IsPublished ? "bg-success" : "bg-secondary")">
-                                        @(recipe.IsPublished ? "Published" : "Hidden")
+                                        @(recipe.IsPublished ? "Đã đăng" : "Đã ẩn")
                                     </span>
                                 </td>
-                                <td class="text-muted small">@recipe.CreatedAt.ToString("MMM dd, yyyy")</td>
+                                <td class="text-muted small">@recipe.CreatedAt.ToString("dd/MM/yyyy")</td>
                                 <td>
                                     <div class="d-flex gap-1">
-                                        <a asp-controller="Recipe" asp-action="Details" asp-route-id="@recipe.Id" class="btn btn-outline-primary btn-sm">View</a>
+                                        <a asp-controller="Recipe" asp-action="Details" asp-route-id="@recipe.Id" class="btn btn-outline-primary btn-sm">Xem</a>
                                         <form asp-action="TogglePublish" method="post" class="d-inline">
                                             @Html.AntiForgeryToken()
                                             <input type="hidden" name="id" value="@recipe.Id" />
-                                            <button class="btn btn-outline-warning btn-sm">@(recipe.IsPublished ? "Hide" : "Show")</button>
+                                            <button class="btn btn-outline-warning btn-sm">@(recipe.IsPublished ? "Ẩn" : "Hiện")</button>
                                         </form>
-                                        <form asp-action="DeleteRecipe" method="post" class="d-inline" onsubmit="return confirm('Delete?')">
+                                        <form asp-action="DeleteRecipe" method="post" class="d-inline" onsubmit="return confirm('Xóa?')">
                                             @Html.AntiForgeryToken()
                                             <input type="hidden" name="id" value="@recipe.Id" />
-                                            <button class="btn btn-outline-danger btn-sm">Del</button>
+                                            <button class="btn btn-outline-danger btn-sm">Xóa</button>
                                         </form>
                                     </div>
                                 </td>

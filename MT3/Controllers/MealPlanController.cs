@@ -37,9 +37,11 @@ namespace MT3.Controllers
         [HttpPost, ValidateAntiForgeryToken]
         public async Task<IActionResult> AddMeal(DateTime date, string mealType, int recipeId, string? weekStart)
         {
-            var userId = _userManager.GetUserId(User)!;
-            await _mealPlanService.AddMealAsync(userId, date, mealType, recipeId);
-            TempData["Success"] = "Meal added to plan!";
+            if (recipeId > 0)
+            {
+                var userId = _userManager.GetUserId(User)!;
+                await _mealPlanService.AddMealAsync(userId, date, mealType, recipeId);
+            }
             return RedirectToAction(nameof(Index), new { weekStart });
         }
 

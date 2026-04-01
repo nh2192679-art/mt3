@@ -53,6 +53,19 @@ namespace MT3.Services
 
         public async Task AddMealAsync(string userId, DateTime date, string mealType, int recipeId)
         {
+            if (recipeId <= 0) return;
+
+            var recipeExists = await _context.Recipes.AnyAsync(r => r.Id == recipeId);
+            if (!recipeExists) return;
+
+            // Không thêm trùng cùng món trong cùng bữa ăn của cùng ngày
+            var alreadyExists = await _context.MealPlans.AnyAsync(m =>
+                m.UserId == userId &&
+                m.Date == date.Date &&
+                m.MealType == mealType &&
+                m.RecipeId == recipeId);
+            if (alreadyExists) return;
+
             _context.MealPlans.Add(new MealPlan
             {
                 UserId = userId,

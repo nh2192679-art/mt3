@@ -1,19 +1,19 @@
 @model List<MT3.Models.Comment>
 @{
-    ViewData["Title"] = "Manage Comments";
+    ViewData["Title"] = "Quản lý bình luận";
 }
 
 <div class="container-fluid py-4 px-4">
     <div class="d-flex align-items-center gap-3 mb-4">
-        <a asp-action="Index" class="btn btn-outline-secondary rounded-pill btn-sm"><i class="bi bi-arrow-left me-1"></i>Back</a>
-        <h2 class="fw-bold mb-0"><i class="bi bi-chat-dots text-danger me-2"></i>Comments (@Model.Count)</h2>
+        <a asp-action="Index" class="btn btn-outline-secondary rounded-pill btn-sm"><i class="bi bi-arrow-left me-1"></i>Quay lại</a>
+        <h2 class="fw-bold mb-0"><i class="bi bi-chat-dots text-danger me-2"></i>Bình luận (@Model.Count)</h2>
     </div>
     <div class="card border-0 shadow-sm rounded-4">
         <div class="card-body p-4">
             <div class="table-responsive">
                 <table class="table table-hover align-middle">
                     <thead class="table-light">
-                        <tr><th>Comment</th><th>User</th><th>Recipe</th><th>Date</th><th>Actions</th></tr>
+                        <tr><th>Nội dung</th><th>Người dùng</th><th>Công thức</th><th>Ngày</th><th>Hành động</th></tr>
                     </thead>
                     <tbody>
                         @foreach (var comment in Model)
@@ -22,18 +22,18 @@
                                 <td style="max-width:300px;">
                                     <span class="text-truncate d-block">@comment.Content</span>
                                 </td>
-                                <td class="text-muted small">@(comment.User?.FullName ?? comment.User?.Email ?? "Deleted")</td>
+                                <td class="text-muted small">@(comment.User?.FullName ?? comment.User?.Email ?? "Đã xóa")</td>
                                 <td>
                                     <a asp-controller="Recipe" asp-action="Details" asp-route-id="@comment.RecipeId" class="text-danger small">
                                         @comment.Recipe?.Title
                                     </a>
                                 </td>
-                                <td class="text-muted small">@comment.CreatedAt.ToString("MMM dd, yyyy")</td>
+                                <td class="text-muted small">@comment.CreatedAt.ToString("dd/MM/yyyy")</td>
                                 <td>
-                                    <form asp-action="DeleteComment" method="post" class="d-inline" onsubmit="return confirm('Delete?')">
+                                    <form asp-action="DeleteComment" method="post" class="d-inline" onsubmit="return confirm('Xóa?')">
                                         @Html.AntiForgeryToken()
                                         <input type="hidden" name="id" value="@comment.Id" />
-                                        <button class="btn btn-outline-danger btn-sm rounded-pill">Delete</button>
+                                        <button class="btn btn-outline-danger btn-sm rounded-pill">Xóa</button>
                                     </form>
                                 </td>
                             </tr>

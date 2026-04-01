@@ -66,9 +66,10 @@ namespace MT3.Controllers
             vm.Recipe.UserId = userId;
             vm.Recipe.ImageUrl = imageUrl ?? vm.Recipe.ImageUrl;
             vm.Recipe.CreatedAt = DateTime.UtcNow;
+            vm.Recipe.IsPublished = true;
 
             var id = await _recipeService.CreateRecipeAsync(vm.Recipe, vm.IngredientInputs, vm.StepInputs);
-            TempData["Success"] = "Recipe created successfully!";
+            TempData["Success"] = "Đăng công thức thành công!";
             return RedirectToAction(nameof(Details), new { id });
         }
 

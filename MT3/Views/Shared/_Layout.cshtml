@@ -1,1 +1,104 @@
-﻿<!DOCTYPE html> <html lang="en"> <head>     <meta charset="utf-8" />     <meta name="viewport" content="width=device-width, initial-scale=1.0" />     <title>@ViewData["Title"] - ChefVN</title>     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" />     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" /> </head> <body>     <nav class="navbar navbar-expand-lg navbar-dark bg-chef sticky-top shadow-sm">         <div class="container">             <a class="navbar-brand fw-bold fs-4" asp-controller="Home" asp-action="Index">                 <i class="bi bi-fire me-1 text-warning"></i>Chef<span class="text-warning">VN</span>             </a>             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain">                 <span class="navbar-toggler-icon"></span>             </button>             <div class="collapse navbar-collapse" id="navbarMain">                 <form class="d-flex mx-auto my-2 my-lg-0" style="max-width:420px;width:100%;" asp-controller="Recipe" asp-action="Index" method="get">                     <div class="input-group">                         <input class="form-control" type="search" name="search" placeholder="Search recipes..." />                         <button class="btn btn-warning" type="submit"><i class="bi bi-search"></i></button>                     </div>                 </form>                 <ul class="navbar-nav ms-auto align-items-center gap-1">                     <li class="nav-item"><a class="nav-link" asp-controller="Recipe" asp-action="Index"><i class="bi bi-grid me-1"></i>Recipes</a></li>                     @if (User.Identity != null && User.Identity.IsAuthenticated)                     {                         <li class="nav-item"><a class="nav-link" asp-controller="MealPlan" asp-action="Index"><i class="bi bi-calendar3 me-1"></i>Meal Plan</a></li>                         <li class="nav-item"><a class="nav-link" asp-controller="ShoppingList" asp-action="Index"><i class="bi bi-cart me-1"></i>Shopping</a></li>                         <li class="nav-item"><a class="btn btn-warning btn-sm ms-1" asp-controller="Recipe" asp-action="Create"><i class="bi bi-plus-circle me-1"></i>New Recipe</a></li>                         <li class="nav-item dropdown ms-1">                             <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">                                 <i class="bi bi-person-circle me-1"></i>@User.Identity.Name!.Split("@")[0]                             </a>                             <ul class="dropdown-menu dropdown-menu-end">                                 <li><a class="dropdown-item" asp-controller="Account" asp-action="Profile"><i class="bi bi-person me-2"></i>Profile</a></li>                                 <li><a class="dropdown-item" asp-controller="Recipe" asp-action="MyRecipes"><i class="bi bi-journal-richtext me-2"></i>My Recipes</a></li>                                 <li><a class="dropdown-item" asp-controller="Recipe" asp-action="Favorites"><i class="bi bi-heart me-2"></i>Favorites</a></li>                                 @if (User.IsInRole("Admin"))                                 {                                     <li><hr class="dropdown-divider" /></li>                                     <li><a class="dropdown-item text-danger" asp-controller="Admin" asp-action="Index"><i class="bi bi-shield-lock me-2"></i>Admin Dashboard</a></li>                                 }                                 <li><hr class="dropdown-divider" /></li>                                 <li>                                     <form asp-controller="Account" asp-action="Logout" method="post">                                         <button type="submit" class="dropdown-item"><i class="bi bi-box-arrow-right me-2"></i>Logout</button>                                     </form>                                 </li>                             </ul>                         </li>                     }                     else                     {                         <li class="nav-item"><a class="btn btn-outline-light btn-sm" asp-controller="Account" asp-action="Login">Login</a></li>                         <li class="nav-item"><a class="btn btn-warning btn-sm ms-1" asp-controller="Account" asp-action="Register">Sign Up</a></li>                     }                 </ul>             </div>         </div>     </nav>     @if (TempData["Success"] != null)     {         <div class="alert alert-success alert-dismissible fade show m-0 rounded-0" role="alert">             <div class="container"><i class="bi bi-check-circle me-2"></i>@TempData["Success"]                 <button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>         </div>     }     @if (TempData["Error"] != null)     {         <div class="alert alert-danger alert-dismissible fade show m-0 rounded-0" role="alert">             <div class="container"><i class="bi bi-exclamation-circle me-2"></i>@TempData["Error"]                 <button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>         </div>     }     <main role="main">@RenderBody()</main>     <footer class="bg-dark text-light mt-5 py-5">         <div class="container">             <div class="row g-4">                 <div class="col-lg-4">                     <h5 class="fw-bold"><i class="bi bi-fire text-warning me-2"></i>Chef<span class="text-warning">VN</span></h5>                     <p class="text-muted small">Share your passion for cooking. Discover thousands of recipes.</p>                 </div>                 <div class="col-lg-4">                     <h6 class="fw-bold mb-3">Demo Accounts</h6>                     <p class="text-muted small mb-1"><strong>Admin:</strong> admin@chefvn.com / Admin@123</p>                     <p class="text-muted small"><strong>Chef:</strong> chef@chefvn.com / Chef@123</p>                 </div>                 <div class="col-lg-4 text-lg-end">                     <p class="text-muted small">&copy; @DateTime.Now.Year ChefVN &mdash; ASP.NET Core MVC</p>                 </div>             </div>         </div>     </footer>     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>     <script src="~/js/site.js" asp-append-version="true"></script>     @await RenderSectionAsync("Scripts", required: false) </body> </html> 
+﻿<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - ChefVN</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-chef sticky-top shadow-sm">
+        <div class="container">
+            <a class="navbar-brand fw-bold fs-4" asp-controller="Home" asp-action="Index">
+                <i class="bi bi-fire me-1 text-warning"></i>Chef<span class="text-warning">VN</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarMain">
+                <form class="d-flex mx-auto my-2 my-lg-0" style="max-width:420px;width:100%;" asp-controller="Recipe" asp-action="Index" method="get">
+                    <div class="input-group">
+                        <input class="form-control" type="search" name="search" placeholder="Tìm kiếm công thức..." />
+                        <button class="btn btn-warning" type="submit"><i class="bi bi-search"></i></button>
+                    </div>
+                </form>
+                <ul class="navbar-nav ms-auto align-items-center gap-1">
+                    <li class="nav-item"><a class="nav-link" asp-controller="Recipe" asp-action="Index"><i class="bi bi-grid me-1"></i>Công thức</a></li>
+                    @if (User.Identity != null && User.Identity.IsAuthenticated)
+                    {
+                        <li class="nav-item"><a class="nav-link" asp-controller="MealPlan" asp-action="Index"><i class="bi bi-calendar3 me-1"></i>Lịch ăn</a></li>
+                        <li class="nav-item"><a class="nav-link" asp-controller="ShoppingList" asp-action="Index"><i class="bi bi-cart me-1"></i>Mua sắm</a></li>
+                        <li class="nav-item"><a class="btn btn-warning btn-sm ms-1" asp-controller="Recipe" asp-action="Create"><i class="bi bi-plus-circle me-1"></i>Thêm công thức</a></li>
+                        <li class="nav-item dropdown ms-1">
+                            <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
+                                <i class="bi bi-person-circle me-1"></i>@User.Identity.Name!.Split("@")[0]
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li><a class="dropdown-item" asp-controller="Account" asp-action="Profile"><i class="bi bi-person me-2"></i>Hồ sơ</a></li>
+                                <li><a class="dropdown-item" asp-controller="Recipe" asp-action="MyRecipes"><i class="bi bi-journal-richtext me-2"></i>Công thức của tôi</a></li>
+                                <li><a class="dropdown-item" asp-controller="Recipe" asp-action="Favorites"><i class="bi bi-heart me-2"></i>Yêu thích</a></li>
+                                @if (User.IsInRole("Admin"))
+                                {
+                                    <li><hr class="dropdown-divider" /></li>
+                                    <li><a class="dropdown-item text-danger" asp-controller="Admin" asp-action="Index"><i class="bi bi-shield-lock me-2"></i>Quản trị</a></li>
+                                }
+                                <li><hr class="dropdown-divider" /></li>
+                                <li>
+                                    <form asp-controller="Account" asp-action="Logout" method="post">
+                                        <button type="submit" class="dropdown-item"><i class="bi bi-box-arrow-right me-2"></i>Đăng xuất</button>
+                                    </form>
+                                </li>
+                            </ul>
+                        </li>
+                    }
+                    else
+                    {
+                        <li class="nav-item"><a class="btn btn-outline-light btn-sm" asp-controller="Account" asp-action="Login">Đăng nhập</a></li>
+                        <li class="nav-item"><a class="btn btn-warning btn-sm ms-1" asp-controller="Account" asp-action="Register">Đăng ký</a></li>
+                    }
+                </ul>
+            </div>
+        </div>
+    </nav>
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show m-0 rounded-0" role="alert">
+            <div class="container"><i class="bi bi-check-circle me-2"></i>@TempData["Success"]
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>
+        </div>
+    }
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show m-0 rounded-0" role="alert">
+            <div class="container"><i class="bi bi-exclamation-circle me-2"></i>@TempData["Error"]
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>
+        </div>
+    }
+    <main role="main">@RenderBody()</main>
+    <footer class="bg-dark text-light mt-5 py-5">
+        <div class="container">
+            <div class="row g-4">
+                <div class="col-lg-4">
+                    <h5 class="fw-bold"><i class="bi bi-fire text-warning me-2"></i>Chef<span class="text-warning">VN</span></h5>
+                    <p class="text-muted small">Chia sẻ đam mê nấu ăn. Khám phá hàng nghìn công thức nấu ăn.</p>
+                </div>
+                <div class="col-lg-4">
+                    <h6 class="fw-bold mb-3">Tài khoản Demo</h6>
+                    <p class="text-muted small mb-1"><strong>Admin:</strong> admin@chefvn.com / Admin@123</p>
+                    <p class="text-muted small"><strong>Chef:</strong> chef@chefvn.com / Chef@123</p>
+                </div>
+                <div class="col-lg-4 text-lg-end">
+                    <p class="text-muted small">&copy; @DateTime.Now.Year ChefVN &mdash; ASP.NET Core MVC</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
+
